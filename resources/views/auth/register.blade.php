@@ -2,8 +2,21 @@
     <form method="POST" action="{{ route('register') }}">
         @csrf
 
-        <!-- Name -->
+        <!-- User Type (Student | Industry Partner) -->
         <div>
+            <x-input-label for="type" :value="__('Type')" />
+            {{-- Radio Buttons next to each other --}}
+            <div class="flex items-center justify-between mt-1">
+                <input id="student" name="type" value="Student" :checked="old('type') === 'Student'" type="radio" />
+                <x-input-label for="student" :value="__('Student')" />
+                <input id="industry_partner" name="type" value="Industry Partner" :checked="old('type') === 'Industry Partner'" type="radio" />
+                <x-input-label for="industry_partner" :value="__('Industry Partner')" />
+            </div>
+            <x-input-error :messages="$errors->get('type')" class="mt-2" />
+        </div>
+
+        <!-- Name -->
+        <div class="mt-4">
             <x-input-label for="name" :value="__('Name')" />
             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
             <x-input-error :messages="$errors->get('name')" class="mt-2" />
