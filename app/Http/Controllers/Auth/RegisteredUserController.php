@@ -49,6 +49,21 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
+        // Depending on the user type, create the associated entity
+        if ($request->type === 'Teacher') {
+            $teacher = Teacher::create([
+                'user_id' => $user->id,
+            ]);
+        } elseif ($request->type === 'Student') {
+            $student = Student::create([
+                'user_id' => $user->id,
+            ]);
+        } elseif ($request->type === 'Industry Partner') {
+            $industryPartner = IndustryPartner::create([
+                'user_id' => $user->id,
+            ]);
+        }
+
         return redirect(RouteServiceProvider::HOME);
     }
 }
