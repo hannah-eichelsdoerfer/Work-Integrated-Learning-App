@@ -13,23 +13,23 @@ class StudentRoleSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('students_roles')->insert([
+        DB::table('student_roles')->insert([
             'student_id' => 1,
             'role_id' => 1,
         ]);
-        DB::table('students_roles')->insert([
+        DB::table('student_roles')->insert([
             'student_id' => 1,
             'role_id' => 2,
         ]);
-        DB::table('students_roles')->insert([
+        DB::table('student_roles')->insert([
             'student_id' => 2,
             'role_id' => 1,
         ]);
-        DB::table('students_roles')->insert([
+        DB::table('student_roles')->insert([
             'student_id' => 2,
             'role_id' => 3,
         ]);
-        DB::table('students_roles')->insert([
+        DB::table('student_roles')->insert([
             'student_id' => 2,
             'role_id' => 5,
         ]);
