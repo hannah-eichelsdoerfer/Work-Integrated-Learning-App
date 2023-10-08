@@ -1,7 +1,11 @@
-import './bootstrap';
+import "./bootstrap";
 
-import Alpine from 'alpinejs';
+import {
+    Alpine,
+    Livewire,
+} from "../../vendor/livewire/livewire/dist/livewire.esm";
+import ToastComponent from "../../vendor/usernotnull/tall-toasts/resources/js/tall-toasts";
 
-window.Alpine = Alpine;
+Alpine.plugin(ToastComponent);
 
-Alpine.start();
+Livewire.start();
