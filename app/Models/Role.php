@@ -13,6 +13,11 @@ class Role extends Model
 
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class); // 'student_roles', 'role_id', 'user_id');
+        return $this->belongsToMany(Student::class);
+    }
+
+    public function roles(): HasMany
+    {
+        return $this->hasMany(StudentRole::class, 'student_roles');
     }
 }

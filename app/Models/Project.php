@@ -21,4 +21,21 @@ class Project extends Model
     {
         return $this->hasMany(ProjectApplication::class);
     }
+
+    public function projectFiles()
+    {
+        return $this->hasMany(ProjectFile::class);
+    }
+
+    public function getCreatedAtAttribute($value): string
+    {
+        return date('d/m/Y', strtotime($value));
+    }
+
+    public function previewImage()
+    {
+        // select the first image as the preview image (exclude pdfs)
+        return $this->projectFiles()->where('file_type', '!=', 'pdf')->first();
+        // dd($test);
+    }
 }
