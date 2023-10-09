@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
             RoleSeeder::class,
             StudentRoleSeeder::class,
             ProjectSeeder::class,
+            ProjectApplicationSeeder::class,
+            ProjectFileSeeder::class,
         ]);
     }
 }

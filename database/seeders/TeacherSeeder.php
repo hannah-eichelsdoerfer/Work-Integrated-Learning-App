@@ -15,6 +15,7 @@ class TeacherSeeder extends Seeder
     {
         DB::table('teachers')->insert([
             'user_id' => 1,
+            'created_at' => now(),
         ]);
     }
 }

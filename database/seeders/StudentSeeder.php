@@ -13,13 +13,14 @@ class StudentSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('students')->insert([
-            'user_id' => 9,
-            'gpa' => '5.5',
-        ]);
-        DB::table('students')->insert([
-            'user_id' => 10,
-            'gpa' => '6.5',
-        ]);
+        // find all users of type student and create a student for each
+        $students = DB::table('users')->where('type', 'Student')->get();
+        foreach ($students as $student) {
+            DB::table('students')->insert([
+                'user_id' => $student->id,
+                'gpa' => rand(400, 700) / 100,
+                'created_at' => now(),
+            ]);
+        }
     }
 }

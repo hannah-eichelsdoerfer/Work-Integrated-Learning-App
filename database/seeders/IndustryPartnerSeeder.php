@@ -13,33 +13,14 @@ class IndustryPartnerSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('industry_partners')->insert([
-            'user_id' => 2,
-            'approved' => true,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 3,
-            'approved' => true,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 4,
-            'approved' => true,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 5,
-            'approved' => true,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 6,
-            'approved' => true,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 7,
-            'approved' => false,
-        ]);
-        DB::table('industry_partners')->insert([
-            'user_id' => 8,
-            'approved' => false,
-        ]);
+        $amazon = DB::table('users')->where('name', 'Amazon')->first();
+        $industryPartners= DB::table('users')->where('type', 'Industry Partner')->get();
+        foreach ($industryPartners as $industryPartner) {
+            DB::table('industry_partners')->insert([
+                'user_id' => $industryPartner->id,
+                'approved' => $industryPartner->name === 'Amazon' || $industryPartner->name === 'Facebook' || $industryPartner->name === 'Google' || $industryPartner->name === 'Microsoft' || $industryPartner->name === 'Apple', // Amazon, Facebook, Google, Microsoft, Apple are approved
+                'created_at' => now(),
+            ]);
+        }
     }
 }
