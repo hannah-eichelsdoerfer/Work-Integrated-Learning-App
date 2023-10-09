@@ -43,7 +43,6 @@ Route::middleware('auth')->group(function () {
     Route::patch('/industry-partners/{industryPartner}', [IndustryPartnerController::class, 'update'])->name('industry-partners.update');
     // Teacher s
     Route::post('/teachers/approve/{id}', [TeacherController::class, 'approve'])->name('teachers.approve');
-    // assign to project by teacher
     Route::post('/teachers/assign', [TeacherController::class, 'assign'])->name('teachers.assign');
     // Applications
     Route::get('/applications', [ProjectApplicationController::class, 'index'])->name('applications.index');
