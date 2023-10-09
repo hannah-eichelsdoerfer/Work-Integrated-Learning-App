@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            // Add other teacher-specific columns here
-            // GPA from 1 to 7 resrticted by here
+            // Add other student-specific columns here
             $table->float('gpa', 3, 2)->nullable();
             $table->timestamps();
             // Define the foreign key relationship 

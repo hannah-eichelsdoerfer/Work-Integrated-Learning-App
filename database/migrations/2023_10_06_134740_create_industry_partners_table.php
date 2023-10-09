@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             // Add other teacher-specific columns here
-            $table->string('approved')->default('pending');
+            $table->boolean('approved')->default(false);
             $table->timestamps();
             // Define the foreign key relationship 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
