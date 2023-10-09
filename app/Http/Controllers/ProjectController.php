@@ -160,4 +160,10 @@ class ProjectController extends Controller
 
         return redirect()->route('dashboard');
     }
+
+    public function students(Project $project)
+    {
+        $project = Project::find($project->id);
+        return $project->students;
+    }
 }

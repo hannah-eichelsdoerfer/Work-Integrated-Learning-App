@@ -27,48 +27,58 @@ class TeacherController extends Controller
     public function assign(Request $request)
     {
         $request->validate([
-            'project_id' => 'required|exists:projects,id',
-            'student_id' => 'required|exists:students,id',
+            'year' => 'required|integer',
+            'trimester' => 'required|integer',
         ]);
 
-        // $student = Student::find($request->student_id);
-        // $student->project_id = $request->project_id;
-        // $student->save();
-
-        // Retrieve the selected offering (year and trimester)
         $year = $request->input('year');
         $trimester = $request->input('trimester');
 
-        // Retrieve the list of projects for the selected offering
+        // Retrieve the list of projects for the selected offering (year and trimester)
         $projects = Project::where('year', $year)
             ->where('trimester', $trimester)
             ->get();
 
-        // for each project, retrieve the list of students who have applied for it
         foreach ($projects as $project) {
-            $project->applications = ProjectApplication::where('project_id', $project->id)->get();
+            $rolesToFill = ['software developer', 'project manager', 'business analyst', 'tester', 'client liaison'];
+            $roleIds = [1, 2, 3, 4, 5];
+            $potentialStudents = [];
+
+            // add all students with an application for this project to the potential students array
+            $potentialStudents = $project->applications->pluck('student')->sortByDesc('gpa');
+            // pick ONE student for each role, remove other students from the potential students array
+
+            // // push the students that have applied and have a needed role into the potential students array
+            // foreach ($project->applications as $application) {
+            //     $studentRoles = $application->student->roles;
+            //     foreach ($studentRoles as $studentRole) {
+            //         // Check if the student's role ID is in the list of required role IDs
+            //         if (in_array($studentRole->id, $roleIds)) {
+            //             // Add the student to the potential students array and break out of the loop
+            //             $potentialStudents[] = $application->student;
+            //             break;
+            //         }
+            //     }
+            // }
+
+            // assign the students to the project
+            $project->potentialStudents = $potentialStudents->take($project->num_students_needed);
+
+            // Update application status to accepted
+            foreach ($project->potentialStudents as $student) {
+                $application = ProjectApplication::where('student_id', $student->id)
+                    ->where('project_id', $project->id)
+                    ->first();
+                $application->status = 'accepted';
+                $application->save();
+            }
         }
-
-        // dd($projects);
-
-        // // Retrieve the list of students who have applied for projects in the same offering
-        // $students = Student::whereHas('applications', function ($query) use ($year, $trimester) {
-        //     $query->where('year', $year)->where('trimester', $trimester);
-        // })->get();
-
-        // dd($students);
-
-        // Implement your assignment logic here based on the specified conditions
-        // You can start with the conditions described in your requirements and add more as needed.
-
-        // Update the database records to reflect project-student assignments
-        // Handle cases where some projects cannot be assigned any students
 
         // Redirect back with a success or error message
         toast()
-            ->success('Students been assigned successfully for the selected offering')
+            ->success('Students have been assigned successfully for the selected offering')
             ->push();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('projects.index');
     }
 }

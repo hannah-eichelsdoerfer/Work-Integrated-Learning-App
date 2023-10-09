@@ -30,7 +30,7 @@ class StudentController extends Controller
     public function show($id)
     {
         if (
-            $id != auth()->user()->student->id &&
+            $id != auth()->user()->id &&
             auth()->user()->type != 'Teacher'
         ) {
             return redirect('dashboard');
