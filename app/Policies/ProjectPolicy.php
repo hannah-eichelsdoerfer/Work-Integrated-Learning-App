@@ -37,7 +37,7 @@ class ProjectPolicy
      */
     public function update(User $user, Project $project): bool
     {
-        //
+        return $user->industryPartner->id == $project->industry_partner_id;
     }
 
     /**
@@ -45,7 +45,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        //
+        return $user()->industryPartner->id == $project->industry_partner_id;
     }
 
     /**
