@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class ProjectController extends Controller
 {
@@ -14,7 +15,7 @@ class ProjectController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
-        // $this->middleware('role:industry-partner');
+        $this->middleware('checkUserType:Industry Partner')->only(['create', 'store', 'edit', 'update', 'destroy']);
     }
     /**
      * Display a listing of the resource.
@@ -35,11 +36,11 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create()
     {
-        //
+        return "create project form";
     }
-    
+
     /**
      * Store a newly created resource in storage.
      */
@@ -47,11 +48,55 @@ class ProjectController extends Controller
     {
         $user = Auth::user(); // Get the currently authenticated user
         $industryPartner = $user->industryPartner; // Get the industry partner associated with the user
+
+        // Check if the user is an approved industry partner
+        if (!$industryPartner->approved) {
+            toast()
+                ->danger('You are not yet an approved industry partner.')
+                ->push();
+            return redirect()->route('dashboard');
+        }
+
+        // Create the project
         $project = Project::create($request->validated() + ['industry_partner_id' => $industryPartner->id]);
 
-        return redirect()
-            ->route('projects.show', $project)
-            ->with('success', 'Project created successfully.');
+        // Handle image uploads
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $imagePath = $image->store('project-images', 'public');
+                $project->projectFiles()->create([
+                    'file_path' => $imagePath,
+                    'file_type' => 'image',
+                    'file_name' => $image->getClientOriginalName(),
+                ]);
+            }
+        } else {
+            $project->projectFiles()->create([
+                'file_path' => 'project-images/default.jpeg',
+                'file_type' => 'image',
+                'file_name' => 'Placeholder Image',
+            ]);
+        }
+
+        // Handle PDF uploads
+        if ($request->hasFile('pdfs')) {
+            foreach ($request->file('pdfs') as $pdf) {
+                $pdfPath = $pdf->store('project-pdfs', 'public');
+                $project->projectFiles()->create([
+                    'file_path' => $pdfPath,
+                    'file_type' => 'pdf',
+                    'file_name' => $pdf->getClientOriginalName(),
+                ]);
+            }
+        }
+
+        $project->save();
+
+        toast()
+            ->success('Project created successfully.')
+            ->push();
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
@@ -77,12 +122,13 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        // validate and update Project info
         $project->update($request->validated());
 
-        return redirect()
-            ->route('projects.show', $project)
-            ->with('success', 'Project updated successfully.');
+        toast()
+            ->success('Project updated successfully.')
+            ->push();
+
+        return redirect()->route('projects.show', $project);
     }
 
     /**
@@ -90,18 +136,28 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
+        // thorw error if user is not the owner of the project
+        if ($project->industry_partner_id !== Auth::user()->industryPartner->id) {
+            toast()
+                ->danger('You are not the owner of this project.')
+                ->push();
+            return redirect()->route('projects.show', $project->id);
+        }
+
+
         if ($project->applications->count() > 0) {
             toast()
                 ->danger('Project has applications and cannot be deleted.')
                 ->push();
-            return redirect()
-                ->route('projects.show', $project->id);
+            return redirect()->route('projects.show', $project->id);
         }
 
         $project->delete();
 
-        return redirect()
-            ->route('dashboard')
-            ->with('success', 'Project deleted successfully.');
+        toast()
+            ->success('Project deleted successfully.')
+            ->push();
+
+        return redirect()->route('dashboard');
     }
 }
