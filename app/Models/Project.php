@@ -34,8 +34,12 @@ class Project extends Model
 
     public function previewImage()
     {
-        // select the first image as the preview image (exclude pdfs)
         return $this->projectFiles()->where('file_type', '!=', 'pdf')->first();
-        // dd($test);
+    }
+
+    public function students()
+    {
+        // all students who have applied for this project with a status of 'accepted'
+        return $this->belongsToMany(Student::class, 'project_applications')->wherePivot('status', 'accepted');
     }
 }
