@@ -89,19 +89,4 @@ class ProjectApplicationController extends Controller
             ->route('projects.show', $project)
             ->with('success', 'Project application submitted successfully.');
     }
-
-    // project id
-    public function apply(Project $project)
-    {
-        // $user = auth()->user();
-
-        // // Check if the user is a student and has filled out GPA and roles
-        // if ($user->type === 'Student' && $user->student && $user->student->hasCompletedProfile()) {
-        //     // User has completed profile, display application form
-        //     return view('projects.application', compact('project'));
-        // }
-
-        // // User has not completed profile, display profile completion form
-        // return view('projects.profile_completion');
-    }
 }
