@@ -13,8 +13,8 @@ return new class extends Migration {
         Schema::create('project_files', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('file_path')->default('project-files/default.pdf');
             $table->enum('file_type', ['image', 'pdf']);
+            $table->string('file_path')->default('project-files/default.pdf');
             $table->string('file_name');
             $table->timestamps();
             $table

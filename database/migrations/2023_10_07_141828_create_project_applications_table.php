@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('project_applications', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->foreignId('project_id')->constrained('projects');
             $table->foreignId('student_id')->constrained('students');
             $table->text('justification');
             // pending, accepted, rejected
             $table->string('status')->default('pending')->in_array(['pending', 'accepted', 'rejected']);
+            $table->timestamps();
         });
     }
 

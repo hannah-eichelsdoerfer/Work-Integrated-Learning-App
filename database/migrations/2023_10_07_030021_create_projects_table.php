@@ -12,20 +12,20 @@ return new class extends Migration {
     {
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
             $table->string('title');
             $table->string('contact_name');
             $table->string('contact_email');
             $table->text('description');
             $table
-                ->integer('num_students_needed')
-                ->min(3)
-                ->max(6);
+            ->integer('num_students_needed')
+            ->min(3)
+            ->max(6);
             $table
-                ->integer('trimester')
-                ->min(1)
-                ->max(3);
+            ->integer('trimester')
+            ->min(1)
+            ->max(3);
             $table->integer('year')->default(date('Y'));
+            $table->timestamps();
             $table->string('offering')->virtualAs('year || "-" || trimester');
             $table->foreignId('industry_partner_id')->constrained('industry_partners');
         });
