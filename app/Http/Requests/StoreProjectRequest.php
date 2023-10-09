@@ -31,11 +31,4 @@ class StoreProjectRequest extends FormRequest
             'year' => 'required|date_format:Y',
         ];
     }
-
-    public function messages(): array
-    {
-        return [
-            'min_words' => 'The :attribute must be at least 3 words.',
-        ];
-    }
 }

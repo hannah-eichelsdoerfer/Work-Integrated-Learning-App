@@ -12,7 +12,7 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->type === 'Industry Partner';
+        return $this->user()->type === 'Industry Partner'; // && $this->user()->industryPartner->user_id === $this->route('project')->industry_partner_id;
     }
 
     /**
@@ -39,13 +39,6 @@ class UpdateProjectRequest extends FormRequest
             'num_students_needed' => 'required|integer|between:3,6',
             'trimester' => 'required|integer|between:1,3',
             'year' => 'required|date_format:Y',
-        ];
-    }
-
-    public function messages(): array
-    {
-        return [
-            'min_words' => 'The :attribute must be at least 3 words.',
         ];
     }
 }
