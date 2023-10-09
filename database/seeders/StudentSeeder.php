@@ -18,7 +18,7 @@ class StudentSeeder extends Seeder
         foreach ($students as $student) {
             DB::table('students')->insert([
                 'user_id' => $student->id,
-                'gpa' => rand(400, 700) / 100,
+                'gpa' => rand(300, 700) / 100,
                 'created_at' => now(),
             ]);
         }

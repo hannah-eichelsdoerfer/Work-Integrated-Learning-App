@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
 class UserSeeder extends Seeder
 {
@@ -121,5 +122,13 @@ class UserSeeder extends Seeder
             'type' => 'Student',
             'created_at' => now(),
         ]);
+        DB::table('users')->insert([
+            'name' => 'Olivia',
+            'email' => 'olivia@griffithuni.edu.au',
+            'password' => bcrypt('123456'),
+            'type' => 'Student',
+            'created_at' => now(),
+        ]);
+        User::factory()->count(10)->create();
     }
 }

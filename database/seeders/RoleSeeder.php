@@ -28,11 +28,5 @@ class RoleSeeder extends Seeder
         DB::table('roles')->insert([
             'name' => 'Client Liaison'
         ]);
-        DB::table('roles')->insert([
-            'name' => 'Designer'
-        ]);
-        DB::table('roles')->insert([
-            'name' => 'Database Administrator'
-        ]);
     }
 }
