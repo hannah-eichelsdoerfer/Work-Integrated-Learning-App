@@ -7,7 +7,7 @@
 
     {{-- Students --}}
     @foreach ($students as $student)
-        <div>
+        <div class="p-6 bg-white border-b border-gray-200">
             <h1 class="font-semibold">{{ $student->user->name }}</h1>
             <p class="text-gray-600">{{ $student->user->email }}</p>
             <p>GPA: {{ $student->gpa }}</p>

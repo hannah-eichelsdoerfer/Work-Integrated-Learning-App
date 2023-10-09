@@ -60,6 +60,29 @@
 
         <hr class="mb-6">
 
+        <!-- Assigned Students -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-semibold mb-4">Assigned Students</h2>
+            @if ($project->students->count() > 0)
+                <ul class="list-disc pl-4">
+                    @foreach ($project->students as $student)
+                        <li>
+                            <a class="text-red-500 hover:underline"
+                                href="{{ route('students.show', $student->id) }}">
+                                {{ $student->user->name }} 
+                                | {{ $student->gpa }}
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            @else
+                <p class="text-gray-500 italic">No students assigned yet</p>
+            @endif
+        </div>
+
+        
+        <!-- Applications -->
+        <hr class="mb-6">
         <div>
             @if (auth()->user()->type == 'Student')
                 @if (auth()->user()->student->applications->contains('project_id', $project->id))
