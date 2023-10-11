@@ -38,7 +38,7 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return "create project form";
+        //
     }
 
     /**
@@ -114,6 +114,12 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        if (Gate::denies('update', $project)) {
+            toast()
+                ->danger('You are not the owner of this project.')
+                ->push();
+            return redirect()->route('projects.show', $project);
+        }
         return view('projects.edit')->with('project', $project);
     }
 
@@ -122,13 +128,20 @@ class ProjectController extends Controller
      */
     public function update(UpdateProjectRequest $request, Project $project)
     {
-        $project->update($request->validated());
+        // Check if the user is authorized to update the project using the ProjectPolicy
+        if (Gate::allows('update', $project)) {
+            $project->update($request->validated());
 
+            toast()
+                ->success('Project updated successfully.')
+                ->push();
+
+            return redirect()->route('projects.show', $project);
+        }
         toast()
-            ->success('Project updated successfully.')
+            ->danger('You are not the owner of this project.')
             ->push();
-
-        return redirect()->route('projects.show', $project);
+        return redirect()->route('projects', $project);
     }
 
     /**
@@ -136,29 +149,29 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project)
     {
-        // thorw error if user is not the owner of the project
-        if ($project->industry_partner_id !== Auth::user()->industryPartner->id) {
+        // Check if the user is authorized to delete the project using the ProjectPolicy
+        if (Gate::allows('delete', $project)) {
+            // The user is authorized, perform the delete action
+            if ($project->applications->count() > 0) {
+                toast()
+                    ->danger('Project has applications and cannot be deleted.')
+                    ->push();
+                return redirect()->route('projects.show', $project->id);
+            }
+
+            $project->delete();
+
             toast()
-                ->danger('You are not the owner of this project.')
+                ->success('Project deleted successfully.')
                 ->push();
-            return redirect()->route('projects.show', $project->id);
+
+            return redirect()->route('dashboard');
         }
-
-
-        if ($project->applications->count() > 0) {
-            toast()
-                ->danger('Project has applications and cannot be deleted.')
-                ->push();
-            return redirect()->route('projects.show', $project->id);
-        }
-
-        $project->delete();
 
         toast()
-            ->success('Project deleted successfully.')
+            ->danger('You are not the owner of this project.')
             ->push();
-
-        return redirect()->route('dashboard');
+        return redirect()->route('projects.show', $project->id);
     }
 
     public function students(Project $project)

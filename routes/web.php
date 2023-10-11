@@ -36,7 +36,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     // Students
-    Route::resource('projects', ProjectController::class);
+    Route::resource('projects', ProjectController::class)->except(['create']);
     // Industry Partners
     Route::get('/industry-partners', [IndustryPartnerController::class, 'index'])->name('industry-partners.index');
     Route::get('/industry-partners/{industryPartner}', [IndustryPartnerController::class, 'show'])->name('industry-partners.show');
