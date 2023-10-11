@@ -45,7 +45,7 @@ class ProjectPolicy
      */
     public function delete(User $user, Project $project): bool
     {
-        return $user()->industryPartner->id == $project->industry_partner_id;
+        return $user->industryPartner->id == $project->industry_partner_id;
     }
 
     /**
