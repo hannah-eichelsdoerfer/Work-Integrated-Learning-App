@@ -8,7 +8,7 @@
             {{-- Radio Buttons next to each other --}}
             <div class="flex items-center justify-between mt-1">
                 <div class="flex items-center gap-3">
-                    <input id="student" name="type" value="Student" :checked="old('type') === 'Student'" type="radio" />
+                    <input id="student" name="type" value="Student" type="radio" @if(old('type') === "Student" || !old('type')) checked @endif />
                     <x-input-label for="student" :value="__('Student')" />
                 </div>
                 <div class="flex items-center gap-3">
